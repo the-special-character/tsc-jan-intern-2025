@@ -1,0 +1,27 @@
+.wrapper {
+  height: 100vh;
+  background-color: gainsboro;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inner-wrapper {
+  width: 100%;
+  max-width: 748px;
+  height: 300px;
+  background-color: yellow;
+  border-radius: 20px;
+  box-shadow: 14px 18px 24px -5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  overflow: hidden;
+}
+
+.img {
+  aspect-ratio: 1 / 1;
+}
+
+.content {
+  flex: 1;
+  background-color: coral;
+}
