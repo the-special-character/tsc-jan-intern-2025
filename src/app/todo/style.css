@@ -1,27 +1,15 @@
 .wrapper {
-  height: 100vh;
-  background-color: gainsboro;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 36px;
   align-items: center;
 }
 
-.inner-wrapper {
-  width: 100%;
-  max-width: 748px;
-  height: 300px;
-  background-color: yellow;
-  border-radius: 20px;
-  box-shadow: 14px 18px 24px -5px rgba(0, 0, 0, 0.1);
-  display: flex;
-  overflow: hidden;
+.wrapper > input {
+  grid-column: 1 / -1;
+  grid-row: 1 / -1;
 }
 
-.img {
-  aspect-ratio: 1 / 1;
-}
-
-.content {
-  flex: 1;
-  background-color: coral;
+.wrapper > svg {
+  grid-column: 2 / -1;
+  grid-row: 1 / -1;
 }
