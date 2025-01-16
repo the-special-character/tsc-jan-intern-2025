@@ -1,161 +1,73 @@
 "use client";
 
+import TodoItem from "@/components/todoItem";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import React, { Component, memo, PureComponent, useState } from "react";
-import "./style.css";
-import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
-import { count, log } from "console";
-import shallowCompare from "react-addons-shallow-compare"; // ES6
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { log } from "node:console";
+import React, { useRef, useState } from "react";
 
-type Props = {};
+const Todo = () => {
+  const [todoList, setTodoList] = useState([]);
+  const todoTextRef = useRef(null);
 
-// let count = 0;
-
-// Mouting
-//  -> Constuctor
-//  -> getDerivedStateFromProps
-//  -> render
-//  -> componentDidMount
-// Updating
-//  -> getDerivedStateFromProps
-// UnMounting
-// Error
-
-class Child1 extends PureComponent {
-  // shouldComponentUpdate(nextProps, nextState) {
-  //   return shallowCompare(this, nextProps, nextState);
-  // }
-  // mouseMove = () => {
-  //   console.log("mousemove");
-  // };
-
-  // componentDidMount() {
-  //   document.addEventListener("mousemove", this.mouseMove);
-  // }
-
-  // componentWillUnmount() {
-  //   document.removeEventListener("mousemove", this.mouseMove);
-  // }
-
-  render(): React.ReactNode {
-    console.log("Child 1");
-    if (this.props.count !== 0) {
-      throw new Error("something went wrong");
-    }
-    return (
-      <div>
-        <h1>Child 1</h1>
-        <p>{this.props.count}</p>
-      </div>
-    );
-  }
-}
-
-const Child2 = () => {
-  console.log("Child 2");
-
-  return <h1>Child 2</h1>;
-};
-
-const MemoChild2 = memo(Child2);
-
-class Todo extends Component {
-  constructor(props: pageProps) {
-    super(props);
-    console.log("constructor");
-    this.state = {
-      count: 0,
-      test: "hello world",
-      // name: `Mr. ${props.name}`,
-    };
-    console.log(document.getElementById("title"));
-  }
-
-  componentDidMount() {
-    console.log(document.getElementById("title"));
-  }
-
-  static getDerivedStateFromError(error) {
-    return {
-      error,
-    };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
-    console.log(errorInfo.componentStack);
-  }
-
-  render() {
-    console.log("render");
-    const { count, error } = this.state;
-    console.log(document.getElementById("title"));
-    if (error) {
-      return <h1>{error.message}</h1>;
-    }
-
-    return (
-      <div>
-        <p id="title" className="text-5xl font-semibold">
-          {this.state.name}
-        </p>
-        <Child1 count={count} />
-        <MemoChild2 />
-
-        <p className="text-5xl font-semibold">{this.state.test}</p>
-
-        <Button
-          onClick={() => {
-            this.setState({ test: "How are you" });
-          }}
-        >
-          Change test
-        </Button>
-        <div className="flex items-center">
-          <Button
-            onClick={() => {
-              this.setState({
-                count: 55,
-                name: "rohit",
-              });
-            }}
-          >
-            +
-          </Button>
-          <p className="text-5xl font-semibold">{this.state.count}</p>
-          <Button
-            onClick={() => {
-              // count -= 1;
-            }}
-          >
-            -
-          </Button>
-        </div>
-      </div>
-    );
-  }
-}
-
-Todo.getDerivedStateFromProps = (props, state) => {
-  console.log("getDerivedStateFromProps");
-  console.log(document.getElementById("title"));
-  return {
-    name: `Mr. ${props.name}`,
+  const addTodo = (event) => {
+    event.preventDefault();
+    const todoText = todoTextRef.current;
+    const todoTextValue = todoText.value;
+    setTodoList((val) => {
+      return [...val, { id: new Date().valueOf(), todoText: todoTextValue }];
+    });
+    todoText.value = "";
   };
-};
 
-const App = () => {
-  const [name, setName] = useState("yagnesh");
+  const deleteTodo = (todoItem) => {
+    const index = todoList.findIndex((item) => item.id === todoItem.id);
+    setTodoList((val) => [...val.slice(0, index), ...val.slice(index + 1)]);
+  };
 
   return (
-    <div>
-      <Todo name={name} />
-      {/* new Todo({ name }) */}
-      <p>{name}</p>
-      <Button onClick={() => setName("virat")}>Change Name</Button>
-    </div>
+    <main className="flex flex-col items-center gap-4 mt-4 h-screen">
+      <h1 className="text-3xl font-semibold">Todo App</h1>
+      <form className="w-full max-w-screen-sm" onSubmit={addTodo}>
+        <div className="space-y-2">
+          <Label htmlFor="todo-text" className="sr-only">
+            Input with end button
+          </Label>
+          <div className="flex rounded-lg shadow-sm shadow-black/5">
+            <Input
+              ref={todoTextRef}
+              id="todo-text"
+              className="-me-px flex-1 rounded-e-none shadow-none focus-visible:z-10"
+              placeholder="Enter your todo here..."
+            />
+            <Button className="rounded-l-none">Add Todo</Button>
+          </div>
+        </div>
+      </form>
+      <div className="w-full p-4 flex flex-col flex-1 gap-4">
+        {todoList.map((todoItem) => (
+          <TodoItem
+            key={todoItem.id}
+            todoItem={todoItem}
+            deleteTodo={deleteTodo}
+          />
+        ))}
+      </div>
+      <div className="flex w-full">
+        <Button variant="default" className="flex-1 rounded-none">
+          All
+        </Button>
+        <Button variant="secondary" className="flex-1 rounded-none">
+          Pending
+        </Button>
+        <Button variant="secondary" className="flex-1 rounded-none">
+          Completed
+        </Button>
+      </div>
+    </main>
   );
 };
 
-export default App;
+export default Todo;
