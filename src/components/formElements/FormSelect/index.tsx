@@ -31,7 +31,7 @@ const FormSelect = ({
       name={name}
       rules={rules}
       render={({ field }) => (
-        <FormItem>
+        <FormItem className="w-full">
           <FormLabel>{label}</FormLabel>
           <Select
             onValueChange={field.onChange}

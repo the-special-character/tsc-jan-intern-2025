@@ -67,13 +67,13 @@ const FormInput = ({ control, name, rules, label, variant, ...props }) => {
       control={control}
       rules={rules}
       render={({ field }) => (
-        <FormItem>
-          <FormLabel>{label}</FormLabel>
+        <FormItem className="w-full">
+          {label && <FormLabel>{label}</FormLabel>}
           <FormControl>
             {createElement(getElement(variant), {
-              name: field.name,
               control,
               ...props,
+              ...field,
             })}
           </FormControl>
           <FormMessage />
